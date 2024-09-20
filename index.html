@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guessing Number Game</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        document.write("<h1>Heading</h1>");
+        document.write("<p>Text</p>");
+    </script>
+
+
+    <p id="browserLanguage">
+        text language
+    </p>
+    <script>
+        let browserLanguage=navigator.language;
+        document.getElementById("browserLanguage").innerHTML=
+        "The browser language is: "+browserLanguage;
+    </script>
+
+
+    <p id="randomNumber">
+        Random number between 1 and 100: 
+    </p>
+    <script src="randominteger.js"></script>
+    <script>
+        let randomNumber = randomInt();
+        document.getElementById("randomNumber").innerHTML += randomNumber;
+    </script>
+
+    
+    <h1>Guessing Number Game</h1>
+    <p>You need to guess a number between 1 and 100, and you only have 10 chances.</p>
+    <input type="number" id="guessField" min="1" max="100">
+    <button id="submitGuess">Submit Guess</button>
+    <button id="restartGame" class="hidden">Restart Game</button>
+
+    <div id="result"></div>
+
+    <script src="randominteger.js"></script>
+    <script>
+        let answer;
+        let count;
+        let win=false;
+
+        const guessField = document.getElementById('guessField');
+        const submitGuess = document.getElementById('submitGuess');
+        const restartGame = document.getElementById('restartGame');
+
+        const resultDiv = document.getElementById('result');
+
+        function startGame() {
+            answer = randomInt();
+            count = 0;
+            resultDiv.innerHTML = '';
+            guessField.disabled = false;
+            submitGuess.disabled = false;
+            restartGame.classList.add('hidden');
+            guessField.value = '';
+            guessField.focus();
+        }
+
+        function checkGuess() {
+            const userGuess = Number(guessField.value);
+            count++;
+
+            if (userGuess > answer) {
+                resultDiv.innerHTML += "<p>Your guess is too high.</p>";
+                resultDiv.innerHTML += `<p>Attempts: ${count}/${10}. The last guessing number is: ${userGuess}</p>`;
+            } else if (userGuess < answer) {
+                resultDiv.innerHTML += "<p>Your guess is too low.</p>";
+                resultDiv.innerHTML += `<p>Attempts: ${count}/${10}. The last guessing number is: ${userGuess}</p>`;
+            } else {
+                resultDiv.innerHTML += `<strong>You are right! The answer is ${answer}.</strong>`;
+                resultDiv.innerHTML += `<p>Attempts: ${count}/${10}. The last guessing number is: ${userGuess}</p>`;
+                win=true;
+                endGame();
+            }
+            
+            if (count >= 10 && win==false) {
+                resultDiv.innerHTML += `<strong>Sorry, you've used all your chances. The answer is ${answer}.</strong>`;
+                endGame();
+            }
+
+            guessField.value = '';
+            guessField.focus();
+        }
+
+        function endGame() {
+            guessField.disabled = true;
+            submitGuess.disabled = true;
+            restartGame.classList.remove('hidden'); 
+        }
+
+        submitGuess.addEventListener('click', checkGuess);
+        restartGame.addEventListener('click', startGame);
+
+        startGame();
+    </script>
+</body>
+</html>
